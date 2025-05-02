@@ -1,0 +1,38 @@
+-- Fix lag cơ bản trong Roblox
+local function removeEffects()
+    for _, v in pairs(workspace:GetDescendants()) do
+        if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") then
+            v:Destroy()
+        elseif v:IsA("Decal") then
+            v.Transparency = 1
+        end
+    end
+end
+
+local function setLowGraphics()
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+
+    local lighting = game:GetService("Lighting")
+    lighting.GlobalShadows = false
+    lighting.FogEnd = 1e10
+    lighting.Brightness = 1
+
+    for _, v in pairs(lighting:GetChildren()) do
+        if v:IsA("PostEffect") then
+            v:Destroy()
+        end
+    end
+
+    for _, obj in pairs(workspace:GetDescendants()) do
+        if obj:IsA("BasePart") and not obj:IsA("MeshPart") then
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+        end
+    end
+end
+
+-- Chạy các hàm tối ưu
+removeEffects()
+setLowGraphics()
+
+print("Đã bật chế độ tối ưu hiệu suất.")
